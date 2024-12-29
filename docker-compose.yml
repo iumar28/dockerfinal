@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: iumar28
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: dockerfinaldb
+    ports:
+      - "5432:5432"
+    networks:
+      - app-network
+
+  jhipster:
+    image: ${{secrets.DOCKER.USERNAME}}/dockerfinal:postgres
+    container_name: dockerfinal-postgres
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dockerfinaldb
+      SPRING_DATASOURCE_USERNAME: iumar28
+      SPRING_DATASOURCE_PASSWORD: password
+    ports:
+      - "8080:8080"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
